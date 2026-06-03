@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyadhah Salik Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        h1, .quran-title { font-family: 'Playfair Display', serif; }
+        .chat-answer { white-space: pre-wrap; line-height: 1.75; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .font-arabic { font-family: 'Amiri', serif; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-900 min-h-screen p-4 md:p-8">
+
+    <div id="app" class="max-w-md mx-auto">
+        <header class="mb-6">
+            <h1 class="text-2xl font-bold text-emerald-900">Riyadhah Salik</h1>
+            <p id="date-display" class="text-stone-500 text-sm"></p>
+        </header>
+
+        <div id="top-bar" class="space-y-4 mb-6">
+            <div id="prayer-container" class="bg-emerald-900 text-emerald-50 p-4 rounded-2xl shadow-xl">
+                <div class="flex justify-between items-center mb-3">
+                    <div id="next-prayer-info">
+                        <p class="text-xs uppercase opacity-70">Memuat waktu shalat...</p>
+                    </div>
+                    <div id="countdown" class="text-xl font-mono font-bold">--:--:--</div>
+                </div>
+                <div id="prayer-grid" class="grid grid-cols-5 gap-2 text-center text-[10px]"></div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">
+                <p id="wisdom-text" class="italic text-stone-700 text-sm"></p>
+                <p id="wisdom-author" class="text-[10px] text-stone-400 mt-2 font-bold uppercase"></p>
+            </div>
+        </div>
+
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2 sticky top-0 bg-stone-50 z-10 scrollbar-hide">
+            <button onclick="changeTab('daily')" id="tab-daily" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4">Harian</button>
+            <button onclick="changeTab('audit')" id="tab-audit" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4">Muhasabah</button>
+            <button onclick="changeTab('quran')" id="tab-quran" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4">Quran</button>
+            <button onclick="changeTab('guru')" id="tab-guru" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4">Guru</button>
+        </div>
+
+        <div id="content" class="space-y-6"></div>
+    </div>
+
+    <script>
+        const WISDOMS = [
+            { text: "Hati yang bersih adalah cermin yang memantulkan cahaya Ilahi.", author: "Kalam Mursyid" },
+            { text: "Obat hati itu ada lima: baca Qur'an, shalat malam, berkumpul dengan orang shalih, puasa, dan dzikir.", author: "Imam Syafi'i" },
+            { text: "Dunia adalah penjara bagi orang mukmin dan surga bagi orang kafir.", author: "Hadist Riwayat Muslim" }
+        ];
+
+        let state = JSON.parse(localStorage.getItem('riyadhah_v11')) || {
+            fardhu: [{ id: 'subuh', label: 'Shalat Subuh', completed: false }, { id: 'dzuhur', label: 'Shalat Dzuhur', completed: false }, { id: 'ashar', label: 'Shalat Ashar', completed: false }, { id: 'maghrib', label: 'Shalat Maghrib', completed: false }, { id: 'isya', label: 'Shalat Isya', completed: false }],
+            sunnah: [{ id: 'tahajjud', label: 'Shalat Tahajjud', completed: false }, { id: 'dhuha', label: 'Shalat Dhuha', completed: false }],
+            ibadahLain: [{ id: 'puasa', label: 'Puasa Sunnah', completed: false }, { id: 'tilawah', label: 'Tilawah 1 Juz', completed: false }],
+            penyakitHati: [{ id: 'riya', label: 'Menjaga dari Riya', completed: false }],
+            anggotaTubuh: [{ id: 'lisan', label: 'Menjaga Lisan', completed: false }],
+            zikirList: [{ id: 'istighfar', label: 'Istighfar', count: 0, target: 100 }],
+            chatHistory: [],
+            quranList: [],
+            currentSurah: null
+        };
+
+        let activeTab = 'daily';
+        let prayerTimings = null;
+
+        function init() {
+            document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const wisdom = WISDOMS[new Date().getDate() % WISDOMS.length];
+            document.getElementById('wisdom-text').innerText = `"${wisdom.text}"`;
+            document.getElementById('wisdom-author').innerText = `— ${wisdom.author}`;
+            fetchPrayerTimes();
+            fetchQuranList();
+            render();
+            setInterval(updateCountdown, 1000);
+        }
+
+        async function fetchPrayerTimes() {
+            try {
+                const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Bogor&country=Indonesia&method=11');
+                const data = await res.json();
+                prayerTimings = data.data.timings;
+                renderPrayerUI();
+            } catch (e) { console.error("Gagal memuat jadwal shalat"); }
+        }
+
+        async function fetchQuranList() {
+            try {
+                const res = await fetch('https://equran.id/api/v2/surat');
+                const result = await res.json();
+                state.quranList = result.data;
+                save();
+            } catch (e) { console.error("Gagal memuat daftar Quran"); }
+        }
+
+        async function readSurah(id) {
+            try {
+                const res = await fetch(`https://equran.id/api/v2/surat/${id}`);
+                const result = await res.json();
+                state.currentSurah = {
+                    nama_latin: result.data.namaLatin,
+                    arti: result.data.arti,
+                    ayat: result.data.ayat.map(a => ({
+                        nomor: a.nomorAyat,
+                        ar: a.teksArab,
+                        idn: a.teksIndonesia
+                    }))
+                };
+                render();
+            } catch (e) { console.error("Gagal memuat surah"); }
+        }
+
+        function renderPrayerUI() {
+            if (!prayerTimings) return;
+            const prayers = { Fajr: 'Subuh', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
+            const container = document.getElementById('prayer-grid');
+            container.innerHTML = Object.entries(prayers).map(([key, label]) => `
+                <div class="flex flex-col"><span class="font-bold">${label}</span><span>${prayerTimings[key]}</span></div>
+            `).join('');
+        }
+
+        function updateCountdown() {
+            if (!prayerTimings) return;
+            const now = new Date();
+            const prayers = { Fajr: 'Subuh', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
+            let next = null;
+
+            for (const [key, label] of Object.entries(prayers)) {
+                const [h, m] = prayerTimings[key].split(':');
+                const pDate = new Date(); pDate.setHours(h, m, 0);
+                if (pDate > now) {
+                    next = { name: label, time: pDate };
+                    break;
+                }
+            }
+
+            if (next) {
+                const diff = next.time - now;
+                const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+                const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('next-prayer-info').innerHTML = `<p class="text-xs uppercase opacity-70">Waktu Shalat Berikutnya</p><p class="text-xl font-bold">${next.name}</p>`;
+                document.getElementById('countdown').innerText = `${h}:${m}:${s}`;
+            } else {
+                document.getElementById('next-prayer-info').innerHTML = `<p class="text-xs uppercase opacity-70">Selesai Hari Ini</p>`;
+            }
+        }
+
+        function changeTab(t) { activeTab = t; render(); }
+
+        function render() {
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = b.id === `tab-${activeTab}` ? 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-emerald-800 text-white whitespace-nowrap px-4' : 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-stone-200 whitespace-nowrap px-4';
+            });
+            
+            const container = document.getElementById('content');
+            if (activeTab === 'daily') {
+                container.innerHTML = `${renderCategory('Shalat Fardhu', state.fardhu, 'fardhu')}${renderCategory('Sunnah', state.sunnah, 'sunnah', true)}${renderCategory('Ibadah Lain', state.ibadahLain, 'ibadahLain', true)}${renderCategory('Target Zikir', state.zikirList, 'zikirList', true, true)}`;
+            } else if (activeTab === 'audit') {
+                container.innerHTML = `${renderCategory('Penyakit Hati', state.penyakitHati, 'penyakitHati', true)}${renderCategory('Audit Anggota Tubuh', state.anggotaTubuh, 'anggotaTubuh', true)}`;
+            } else if (activeTab === 'quran') {
+                if (state.currentSurah) {
+                    container.innerHTML = `
+                        <button onclick="state.currentSurah=null; render()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4"><i data-lucide="arrow-left" size="16"></i> Kembali ke Daftar</button>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                            <h2 class="quran-title text-2xl font-bold text-center mb-2">${state.currentSurah.nama_latin}</h2>
+                            <p class="text-center text-stone-500 mb-6">${state.currentSurah.arti}</p>
+                            <div class="space-y-6">
+                                ${state.currentSurah.ayat.map(a => `
+                                    <div class="border-b border-stone-100 pb-4">
+                                        <p class="text-right text-2xl font-arabic mb-2">${a.ar}</p>
+                                        <p class="text-sm text-stone-600">${a.nomor}. ${a.idn}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="grid grid-cols-1 gap-2">${state.quranList.map(s => `
+                        <button onclick="readSurah(${s.nomor})" class="flex justify-between items-center p-4 bg-white rounded-xl shadow-sm border border-stone-100 hover:border-emerald-200 transition-all text-left">
+                            <div class="flex items-center gap-4"><span class="text-stone-400 font-mono">${s.nomor}</span><span class="font-bold">${s.namaLatin}</span></div>
+                            <span class="font-arabic text-emerald-800 font-bold">${s.nama}</span>
+                        </button>
+                    `).join('')}</div>`;
+                }
+            } else if (activeTab === 'guru') {
+                container.innerHTML = `<div class="space-y-4"><div id="chat-container" class="h-96 overflow-y-auto space-y-4 bg-white p-4 rounded-xl border border-stone-100">${state.chatHistory.map(c => `<div class="${c.role==='user'?'text-right':'text-left'}"><div class="inline-block p-4 rounded-2xl text-sm ${c.role==='user'?'bg-emerald-800 text-white rounded-br-none':'bg-stone-100 text-stone-800 rounded-bl-none'} chat-answer">${c.content}</div></div>`).join('')}</div><div class="flex gap-2"><input id="chat-input" type="text" placeholder="Tanya tentang Islam..." class="flex-1 p-3 rounded-xl border border-stone-200 outline-none"><button onclick="handleChat()" class="bg-emerald-800 text-white p-3 rounded-xl"><i data-lucide="send" size="18"></i></button></div></div>`;
+            }
+            lucide.createIcons();
+        }
+
+        function renderCategory(title, items, key, canAdd, isZikir) {
+            return `
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center"><h3 class="text-xs font-bold text-stone-400 uppercase">${title}</h3>${canAdd ? `<button onclick="toggleForm('${key}')" class="text-emerald-800"><i data-lucide="plus" size="16"></i></button>` : ''}</div>
+                    <div id="form-${key}" class="hidden bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col gap-2">
+                        <input id="in-${key}" type="text" placeholder="Nama..." class="text-sm p-2 bg-stone-50 rounded-lg outline-none w-full">
+                        ${isZikir ? `<input id="tr-${key}" type="number" placeholder="Target..." class="text-sm p-2 bg-stone-50 rounded-lg outline-none w-full" value="100">` : ''}
+                        <button onclick="addItem('${key}', ${isZikir})" class="bg-emerald-800 text-white p-2 rounded-lg text-xs font-bold">Simpan</button>
+                    </div>
+                    ${items.map(item => `
+                        <div class="flex items-center gap-2">
+                            ${isZikir ? 
+                                `<div class="flex-1 flex justify-between items-center p-3 bg-white rounded-xl shadow-sm border border-stone-100"><span class="text-sm font-medium">${item.label}</span><div class="flex items-center gap-2"><button onclick="updZikir('${item.id}', ${item.count - 1})"><i data-lucide="minus" size="14"></i></button><span class="font-bold text-emerald-800 text-sm">${item.count}/${item.target}</span><button onclick="updZikir('${item.id}', ${item.count + 1})"><i data-lucide="plus" size="14"></i></button></div></div>` :
+                                `<button onclick="toggleHabit('${key}', '${item.id}')" class="flex-1 flex justify-between items-center p-3 rounded-xl border ${item.completed ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-stone-100'}"><span class="text-sm font-medium">${item.label}</span><i data-lucide="${item.completed ? 'check-circle' : 'circle'}" class="${item.completed ? 'text-emerald-600' : 'text-stone-300'}" size="18"></i></button>`
+                            }
+                            <button onclick="delItem('${key}', '${item.id}')" class="text-rose-400 p-1"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function save() { localStorage.setItem('riyadhah_v11', JSON.stringify(state)); render(); }
+        function toggleHabit(k, id) { state[k] = state[k].map(h => h.id === id ? {...h, completed: !h.completed} : h); save(); }
+        function updZikir(id, count) { state.zikirList = state.zikirList.map(i => i.id === id ? {...i, count: Math.max(0, count)} : i); save(); }
+        function toggleForm(k) { document.getElementById(`form-${k}`).classList.toggle('hidden'); }
+        function addItem(k, z) {
+            const label = document.getElementById(`in-${k}`).value;
+            if (!label) return;
+            if (z) state.zikirList.push({id: Date.now().toString(), label, count: 0, target: document.getElementById(`tr-${k}`).value});
+            else state[k].push({id: Date.now().toString(), label, completed: false});
+            save();
+        }
+        function delItem(k, id) { state[k] = state[k].filter(h => h.id !== id); save(); }
+        
+        async function handleChat() {
+            const input = document.getElementById('chat-input');
+            const q = input.value;
+            if(!q) return;
+            state.chatHistory.push({role: 'user', content: q});
+            input.value = '';
+            render();
+            try {
+                const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Jawablah sebagai guru spiritual Islam dengan santun, gunakan referensi kuat, dan tata letak paragraf yang rapi. Pertanyaan: " + q }] }] })
+                });
+                const d = await res.json();
+                state.chatHistory.push({role: 'assistant', content: d.candidates[0].content.parts[0].text});
+                save();
+            } catch(e) { state.chatHistory.push({role: 'assistant', content: "Maaf, ada kendala jaringan."}); save(); }
+        }
+
+        init();
+    </script>
+</body>
+</html>
