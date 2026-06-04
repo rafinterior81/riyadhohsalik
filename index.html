@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riyadhah Salik Tracker</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riyadhah Salik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -44,15 +44,12 @@
         <button onclick="changeTab('audit')" id="tab-audit" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Muhasabah</button>
         <button onclick="changeTab('quran')" id="tab-quran" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Quran</button>
         <button onclick="changeTab('referensi')" id="tab-referensi" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Referensi</button>
-        <button onclick="changeTab('guru')" id="tab-guru" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Guru</button>
     </div>
 
     <div id="content" class="space-y-6"></div>
 </div>
 
 <script>
-const OPENAI_API_KEY = "AIzaSyCqHT0DKDrJQwuejYTAgmn0lx2X6yKDOV8";
-
 const WISDOMS = [
     { text: "Hati yang bersih adalah cermin yang memantulkan cahaya Ilahi.", author: "Kalam Mursyid" },
     { text: "Amalan yang paling dicintai Allah adalah yang paling konsisten.", author: "Hadist Bukhari" },
@@ -74,7 +71,7 @@ const DEFAULT_REFERENCES = {
         arabic: [
             "أَعُوذُ بِاللهِ السَّمِيعِ الْعَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
             "اللَّهُمَّ إِنَّا نَسْأَلُكَ يَا اللَّهُ يَا رَحْمَنُ يَا رَحِيمُ",
-            "سُبْحَانَ اللهِ وَبِحَمْدِهِ سُبْحَانَ اللهِ الْعَظِيمِ"
+            "سُبْحَانَ اللهِ وَبِحَمْدِهِ سُبْحَانَ اللهِ الْعَظِيمُ"
         ],
         translation: "Ratib Al-Athos dibaca sebagai wirid harian untuk memperkuat hati dan ketenangan jiwa."
     },
@@ -89,8 +86,12 @@ const DEFAULT_REFERENCES = {
 };
 
 function loadReferences() {
-    const saved = JSON.parse(localStorage.getItem('riyadhah_references_v2'));
-    return saved || DEFAULT_REFERENCES;
+    try {
+        const saved = JSON.parse(localStorage.getItem('riyadhah_references_v2'));
+        return saved || DEFAULT_REFERENCES;
+    } catch (e) {
+        return DEFAULT_REFERENCES;
+    }
 }
 
 let state = JSON.parse(localStorage.getItem('riyadhah_v20')) || {
@@ -112,7 +113,6 @@ let state = JSON.parse(localStorage.getItem('riyadhah_v20')) || {
     penyakitHati: [{ id: 'riya', label: 'Menjaga dari Riya', completed: false }],
     anggotaTubuh: [{ id: 'lisan', label: 'Menjaga Lisan', completed: false }],
     zikirList: [{ id: 'istighfar', label: 'Istighfar', count: 0, target: 100 }],
-    chatHistory: [],
     quranList: [],
     currentSurah: null,
     activeRef: null,
@@ -148,7 +148,9 @@ async function fetchPrayerTimes() {
         const data = await res.json();
         prayerTimings = data.data.timings;
         renderPrayerUI();
-    } catch (e) {}
+    } catch (e) {
+        console.error("Gagal memuat jadwal", e);
+    }
 }
 
 function renderPrayerUI() {
@@ -164,7 +166,9 @@ async function fetchQuranList() {
         const res = await fetch('https://equran.id/api/v2/surat');
         const data = await res.json();
         state.quranList = data.data;
-    } catch (e) {}
+    } catch (e) {
+        console.error("Gagal memuat Quran", e);
+    }
 }
 
 function save() {
@@ -265,18 +269,6 @@ function render() {
                 ${state.currentSurah.ayat.map(a => `<div class="mb-4 text-right"><p class="text-3xl font-arabic mb-2 leading-relaxed">${a.teksArab}</p><p class="text-xs text-stone-500 text-left">${a.nomorAyat}. ${a.teksIndonesia}</p></div>`).join('')}
                </div>`
             : `<div class="grid grid-cols-1 gap-2">${state.quranList.map(s => `<button onclick="readSurah(${s.nomor})" class="p-4 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between"><span>${s.namaLatin}</span><span class="font-arabic text-emerald-800">${s.nama}</span></button>`).join('')}</div>`;
-    } else if (activeTab === 'guru') {
-        container.innerHTML = `
-            <div class="space-y-4">
-                <div id="chat-container" class="h-96 overflow-y-auto space-y-4 bg-white p-4 rounded-xl border">
-                    ${state.chatHistory.length === 0 ? '<p class="text-stone-400 text-center text-sm mt-10">Tanyakan sesuatu kepada Guru...</p>' : ''}
-                    ${state.chatHistory.map(c => `<div class="${c.role==='user'?'text-right':'text-left'}"><div class="inline-block p-3 rounded-xl text-sm ${c.role==='user'?'bg-emerald-800 text-white':'bg-stone-100'}">${c.content}</div></div>`).join('')}
-                </div>
-                <div class="flex gap-2">
-                    <input id="chat-input" type="text" placeholder="Tanya tentang Islam..." class="flex-1 p-2 rounded-lg border outline-none">
-                    <button onclick="handleChat()" class="bg-emerald-800 text-white p-2 rounded-lg"><i data-lucide="send" size="18"></i></button>
-                </div>
-            </div>`;
     }
 
     lucide.createIcons();
@@ -455,71 +447,13 @@ function updateCountdown() {
 }
 
 async function readSurah(id) {
-    const res = await fetch(`https://equran.id/api/v2/surat/${id}`);
-    const d = await res.json();
-    state.currentSurah = d.data;
-    render();
-}
-
-async function handleChat() {
-    const input = document.getElementById('chat-input');
-    const q = input.value.trim();
-    if (!q) return;
-
-    state.chatHistory.push({ role: 'user', content: q });
-    input.value = '';
-    render();
-
-    const answer = await askOpenAI(q);
-    state.chatHistory.push({ role: 'assistant', content: answer });
-    render();
-}
-
-async function askOpenAI(question) {
-    const refs = Object.values(state.references).map(r => `
-Judul: ${r.title}
-Arab:
-${(r.arabic || []).join('\n')}
-Terjemahan:
-${r.translation || ''}
-`).join('\n---\n');
-
-    const systemPrompt = `
-Anda adalah guru ruhani yang lembut, singkat, manusiawi, dan penuh adab.
-Jawab berdasarkan referensi yang tersedia dan ilmu Islam yang aman.
-Jika kurang yakin, sampaikan dengan jujur.
-Jawaban harus ringkas, menenangkan, dan praktis.
-`;
-
-    const userPrompt = `
-Pertanyaan: ${question}
-
-Referensi:
-${refs}
-`;
-
     try {
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: userPrompt }
-                ],
-                temperature: 0.3,
-                max_tokens: 180
-            })
-        });
-
-        const data = await res.json();
-        return data?.choices?.[0]?.message?.content?.trim() || "Maaf, belum bisa menjawab saat ini.";
+        const res = await fetch(`https://equran.id/api/v2/surat/${id}`);
+        const d = await res.json();
+        state.currentSurah = d.data;
+        render();
     } catch (e) {
-        return "Maaf, ada gangguan saat menjawab. Coba lagi sebentar.";
+        console.error('Gagal memuat surat', e);
     }
 }
 
