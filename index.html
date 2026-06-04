@@ -2,51 +2,71 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Riyadhah Salik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafaf9; }
-        h1, .quran-title { font-family: 'Playfair Display', serif; }
-        .font-arabic { font-family: 'Amiri', serif; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, .quran-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
     </style>
 </head>
-<body class="text-stone-900 min-h-screen p-4 md:p-8">
+<body class="text-stone-900 min-h-screen p-3 sm:p-4 md:p-8">
 
-<div id="app" class="max-w-md mx-auto">
-    <header class="mb-6">
-        <h1 class="text-2xl font-bold text-emerald-900">Riyadhah Salik</h1>
-        <p id="date-display" class="text-stone-500 text-sm"></p>
+<div id="app" class="w-full max-w-md mx-auto">
+    <header class="mb-4 sm:mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-emerald-900 leading-tight">Riyadhah Salik</h1>
+        <p id="date-display" class="text-stone-500 text-xs sm:text-sm mt-1"></p>
     </header>
 
-    <div id="top-bar" class="space-y-4 mb-6">
-        <div id="prayer-container" class="bg-emerald-900 text-emerald-50 p-4 rounded-2xl shadow-xl">
-            <div class="flex justify-between items-center mb-3">
-                <div id="next-prayer-info">
-                    <p class="text-xs uppercase opacity-70">Memuat waktu shalat...</p>
+    <div id="top-bar" class="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+        <div id="prayer-container" class="bg-emerald-900 text-emerald-50 p-4 sm:p-5 rounded-2xl shadow-xl">
+            <div class="flex justify-between items-center gap-3 mb-3">
+                <div id="next-prayer-info" class="min-w-0">
+                    <p class="text-[10px] sm:text-xs uppercase opacity-70">Memuat waktu shalat...</p>
                 </div>
-                <div id="countdown" class="text-xl font-mono font-bold">--:--:--</div>
+                <div id="countdown" class="text-lg sm:text-xl font-mono font-bold whitespace-nowrap">--:--:--</div>
             </div>
-            <div id="prayer-grid" class="grid grid-cols-5 gap-2 text-center text-[10px]"></div>
+            <div id="prayer-grid" class="grid grid-cols-5 gap-2 text-center text-[9px] sm:text-[10px] leading-tight"></div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">
-            <p id="wisdom-text" class="italic text-stone-700 text-sm"></p>
-            <p id="wisdom-author" class="text-[10px] text-stone-400 mt-2 font-bold uppercase"></p>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-stone-100 shadow-sm">
+            <p id="wisdom-text" class="italic text-stone-700 text-sm sm:text-base leading-relaxed"></p>
+            <p id="wisdom-author" class="text-[10px] sm:text-xs text-stone-400 mt-2 font-bold uppercase"></p>
         </div>
     </div>
 
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-2 sticky top-0 bg-stone-50 z-10 scrollbar-hide">
-        <button onclick="changeTab('daily')" id="tab-daily" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-emerald-800 text-white">Harian</button>
-        <button onclick="changeTab('audit')" id="tab-audit" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Muhasabah</button>
-        <button onclick="changeTab('quran')" id="tab-quran" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Quran</button>
-        <button onclick="changeTab('referensi')" id="tab-referensi" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Referensi</button>
+    <div class="flex gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 sticky top-0 bg-stone-50 z-10 scrollbar-hide">
+        <button onclick="changeTab('daily')" id="tab-daily" class="tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg transition-all whitespace-nowrap px-3 sm:px-4 bg-emerald-800 text-white">Harian</button>
+        <button onclick="changeTab('audit')" id="tab-audit" class="tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg transition-all whitespace-nowrap px-3 sm:px-4 bg-stone-200">Muhasabah</button>
+        <button onclick="changeTab('quran')" id="tab-quran" class="tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg transition-all whitespace-nowrap px-3 sm:px-4 bg-stone-200">Quran</button>
+        <button onclick="changeTab('referensi')" id="tab-referensi" class="tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg transition-all whitespace-nowrap px-3 sm:px-4 bg-stone-200">Referensi</button>
     </div>
 
-    <div id="content" class="space-y-6"></div>
+    <div id="content" class="space-y-4 sm:space-y-6 pb-6 safe-bottom"></div>
 </div>
 
 <script>
@@ -157,7 +177,12 @@ function renderPrayerUI() {
     if (!prayerTimings) return;
     const prayers = { Fajr: 'Subuh', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
     document.getElementById('prayer-grid').innerHTML = Object.entries(prayers)
-        .map(([k, v]) => `<div><p class="font-bold opacity-70">${v}</p><p>${prayerTimings[k]}</p></div>`)
+        .map(([k, v]) => `
+            <div class="bg-emerald-800/40 rounded-lg py-2 px-1">
+                <p class="font-bold opacity-80">${v}</p>
+                <p class="mt-1">${prayerTimings[k]}</p>
+            </div>
+        `)
         .join('');
 }
 
@@ -180,8 +205,8 @@ function save() {
 function render() {
     document.querySelectorAll('.tab-btn').forEach(b => {
         b.className = b.id === `tab-${activeTab}`
-            ? 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-emerald-800 text-white whitespace-nowrap px-4'
-            : 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-stone-200 whitespace-nowrap px-4';
+            ? 'tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg bg-emerald-800 text-white whitespace-nowrap px-3 sm:px-4'
+            : 'tab-btn flex-1 min-w-[86px] py-2.5 text-[11px] sm:text-xs font-bold rounded-lg bg-stone-200 whitespace-nowrap px-3 sm:px-4';
     });
 
     const container = document.getElementById('content');
@@ -198,8 +223,8 @@ function render() {
         container.innerHTML = `
             ${renderCategory('Penyakit Hati', state.penyakitHati, 'penyakitHati', true)}
             ${renderCategory('Audit Anggota Tubuh', state.anggotaTubuh, 'anggotaTubuh', true)}
-            <div class="mt-6 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <h3 class="text-emerald-900 font-bold mb-3">Tingkat Keimanan</h3>
+            <div class="mt-2 sm:mt-4 p-4 sm:p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
+                <h3 class="text-emerald-900 font-bold mb-3 text-sm sm:text-base">Tingkat Keimanan</h3>
                 ${renderIndicator()}
             </div>
         `;
@@ -210,22 +235,22 @@ function render() {
                 <button onclick="backToRefList()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4">
                     <i data-lucide="arrow-left" size="16"></i> Kembali
                 </button>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 space-y-4">
-                    <h2 class="text-xl font-bold text-emerald-900">${ref.title}</h2>
+                <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-stone-100 space-y-4">
+                    <h2 class="text-lg sm:text-xl font-bold text-emerald-900 leading-tight">${ref.title}</h2>
                     <div class="space-y-4">
-                        <div class="font-arabic text-right text-4xl leading-[2.2] space-y-4">
+                        <div class="font-arabic text-right text-2xl sm:text-4xl leading-[2] sm:leading-[2.2] space-y-3 sm:space-y-4">
                             ${ref.arabic.map(a => `<p>${a}</p>`).join('')}
                         </div>
-                        <div class="text-sm text-stone-600 leading-relaxed">
+                        <div class="text-sm sm:text-base text-stone-600 leading-relaxed">
                             ${ref.translation}
                         </div>
                     </div>
                     <div class="flex gap-2 pt-2">
-                        <button onclick="startEditRef('${state.activeRef}')" class="p-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-100" title="Edit">
-                            <i data-lucide="pencil" size="7"></i>
+                        <button onclick="startEditRef('${state.activeRef}')" class="p-2 rounded-lg bg-amber-50 text-amber-600 border border-amber-100" title="Edit">
+                            <i data-lucide="pencil" size="16"></i>
                         </button>
-                        <button onclick="deleteRef('${state.activeRef}')" class="p-1.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-100" title="Hapus">
-                            <i data-lucide="trash-2" size="7"></i>
+                        <button onclick="deleteRef('${state.activeRef}')" class="p-2 rounded-lg bg-rose-50 text-rose-600 border border-rose-100" title="Hapus">
+                            <i data-lucide="trash-2" size="16"></i>
                         </button>
                     </div>
                 </div>
@@ -234,7 +259,7 @@ function render() {
             const refEntries = Object.entries(state.references);
             container.innerHTML = `
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-emerald-900">Referensi Amalan</h2>
+                    <h2 class="text-lg sm:text-xl font-bold text-emerald-900">Referensi Amalan</h2>
                     <button onclick="showAddRefForm()" class="bg-emerald-800 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1">
                         <i data-lucide="plus" size="14"></i> Tambah
                     </button>
@@ -252,9 +277,9 @@ function render() {
 
                 <div class="space-y-3">
                     ${refEntries.map(([k, v]) => `
-                        <div class="p-4 bg-white rounded-xl shadow-sm border border-stone-100">
+                        <div class="p-4 bg-white rounded-xl shadow-sm border border-stone-100 active:scale-[0.99]">
                             <button onclick="openRef('${k}')" class="w-full text-left">
-                                <div class="font-bold text-emerald-800 text-sm leading-snug">${v.title}</div>
+                                <div class="font-bold text-emerald-800 text-sm sm:text-base leading-snug">${v.title}</div>
                             </button>
                         </div>
                     `).join('')}
@@ -263,12 +288,28 @@ function render() {
         }
     } else if (activeTab === 'quran') {
         container.innerHTML = state.currentSurah
-            ? `<button onclick="state.currentSurah=null; render()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4"><i data-lucide="arrow-left" size="16"></i> Kembali</button>
-               <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                <h2 class="text-2xl font-bold text-center mb-6">${state.currentSurah.namaLatin}</h2>
-                ${state.currentSurah.ayat.map(a => `<div class="mb-4 text-right"><p class="text-3xl font-arabic mb-2 leading-relaxed">${a.teksArab}</p><p class="text-xs text-stone-500 text-left">${a.nomorAyat}. ${a.teksIndonesia}</p></div>`).join('')}
+            ? `<button onclick="state.currentSurah=null; render()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4">
+                    <i data-lucide="arrow-left" size="16"></i> Kembali
+               </button>
+               <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-stone-100">
+                <h2 class="text-xl sm:text-2xl font-bold text-center mb-5 sm:mb-6 leading-tight">${state.currentSurah.namaLatin}</h2>
+                <div class="space-y-4">
+                    ${state.currentSurah.ayat.map(a => `
+                        <div class="pb-4 border-b border-stone-100 last:border-b-0">
+                            <p class="text-2xl sm:text-3xl font-arabic mb-2 leading-[2] sm:leading-relaxed text-right">${a.teksArab}</p>
+                            <p class="text-xs sm:text-sm text-stone-500 text-left leading-relaxed">${a.nomorAyat}. ${a.teksIndonesia}</p>
+                        </div>
+                    `).join('')}
+                </div>
                </div>`
-            : `<div class="grid grid-cols-1 gap-2">${state.quranList.map(s => `<button onclick="readSurah(${s.nomor})" class="p-4 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between"><span>${s.namaLatin}</span><span class="font-arabic text-emerald-800">${s.nama}</span></button>`).join('')}</div>`;
+            : `<div class="grid grid-cols-1 gap-2 sm:gap-3">${state.quranList.map(s => `
+                <button onclick="readSurah(${s.nomor})" class="p-4 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between items-center active:scale-[0.99] text-left gap-3">
+                    <div>
+                        <div class="font-semibold text-sm sm:text-base">${s.namaLatin}</div>
+                        <div class="text-[11px] sm:text-xs text-stone-500">${s.arti}</div>
+                    </div>
+                    <span class="font-arabic text-emerald-800 text-xl sm:text-2xl whitespace-nowrap">${s.nama}</span>
+                </button>`).join('')}</div>`;
     }
 
     lucide.createIcons();
@@ -278,39 +319,41 @@ function renderIndicator() {
     const all = [...state.fardhu, ...state.sunnah, ...state.ibadahLain, ...state.penyakitHati, ...state.anggotaTubuh];
     const percent = all.length ? Math.round((all.filter(i => i.completed).length / all.length) * 100) : 0;
     let status = percent < 40 ? "Perlu Perbaikan Segera" : percent < 75 ? "Sedang Berkembang" : "Istiqomah";
-    return `<div class="w-full bg-emerald-200 h-2 rounded-full"><div class="bg-emerald-800 h-full rounded-full" style="width:${percent}%"></div></div><p class="text-xs mt-2 text-emerald-900 font-bold">${percent}% Pencapaian Harian — ${status}</p>`;
+    return `<div class="w-full bg-emerald-200 h-2 rounded-full overflow-hidden"><div class="bg-emerald-800 h-full rounded-full" style="width:${percent}%"></div></div><p class="text-xs mt-2 text-emerald-900 font-bold">${percent}% Pencapaian Harian — ${status}</p>`;
 }
 
 function renderCategory(t, items, k, canAdd, isZikir) {
     return `<div class="space-y-2">
         <div class="flex justify-between items-center">
-            <h3 class="text-xs font-bold text-stone-400 uppercase">${t}</h3>
-            ${canAdd ? `<button onclick="toggleForm('${k}')" class="text-emerald-800"><i data-lucide="plus" size="14"></i></button>` : ''}
+            <h3 class="text-[11px] sm:text-xs font-bold text-stone-400 uppercase tracking-wide">${t}</h3>
+            ${canAdd ? `<button onclick="toggleForm('${k}')" class="text-emerald-800 p-1 rounded-md active:scale-95"><i data-lucide="plus" size="16"></i></button>` : ''}
         </div>
         <div id="form-${k}" class="hidden flex gap-2 mb-2">
-            <input id="in-${k}" class="p-2 w-full text-sm rounded-lg border outline-none">
-            <button onclick="addItem('${k}', ${!!isZikir})" class="bg-emerald-800 text-white px-3 rounded-lg text-xs">Simpan</button>
+            <input id="in-${k}" class="p-3 w-full text-sm rounded-lg border outline-none bg-white">
+            <button onclick="addItem('${k}', ${!!isZikir})" class="bg-emerald-800 text-white px-3 rounded-lg text-xs font-bold min-w-[64px]">Simpan</button>
         </div>
+        <div class="space-y-2">
         ${items.map(i => `
             <div class="flex items-center gap-2">
                 ${isZikir ? `
-                    <div class="flex-1 p-3 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between items-center">
-                        <span>${i.label}</span>
+                    <div class="flex-1 p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between items-center gap-3">
+                        <span class="text-sm sm:text-base">${i.label}</span>
                         <div class="flex items-center gap-2">
-                            <button onclick="updZikir('${i.id}', ${i.count-1})" class="bg-stone-100 px-2 rounded">-</button>
-                            <span class="text-sm font-bold">${i.count}/${i.target}</span>
-                            <button onclick="updZikir('${i.id}', ${i.count+1})" class="bg-stone-100 px-2 rounded">+</button>
+                            <button onclick="updZikir('${i.id}', ${i.count-1})" class="bg-stone-100 px-2.5 py-1 rounded text-sm">-</button>
+                            <span class="text-sm font-bold min-w-[48px] text-center">${i.count}/${i.target}</span>
+                            <button onclick="updZikir('${i.id}', ${i.count+1})" class="bg-stone-100 px-2.5 py-1 rounded text-sm">+</button>
                         </div>
                     </div>
                 ` : `
-                    <button onclick="toggleHabit('${k}','${i.id}')" class="flex-1 p-3 flex justify-between rounded-xl border ${i.completed?'bg-emerald-50 border-emerald-200':'bg-white'}">
-                        <span>${i.label}</span>
-                        <i data-lucide="${i.completed?'check':'circle'}" size="16"></i>
+                    <button onclick="toggleHabit('${k}','${i.id}')" class="flex-1 p-3 sm:p-4 flex justify-between items-center gap-3 rounded-xl border ${i.completed ? 'bg-emerald-50 border-emerald-200' : 'bg-white'} active:scale-[0.99] text-left">
+                        <span class="text-sm sm:text-base">${i.label}</span>
+                        <i data-lucide="${i.completed ? 'check' : 'circle'}" size="16"></i>
                     </button>
                 `}
-                <button onclick="delItem('${k}','${i.id}')" class="text-rose-400"><i data-lucide="trash-2" size="14"></i></button>
+                <button onclick="delItem('${k}','${i.id}')" class="text-rose-400 p-2 rounded-lg shrink-0 active:scale-95"><i data-lucide="trash-2" size="16"></i></button>
             </div>
         `).join('')}
+        </div>
     </div>`;
 }
 
