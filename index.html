@@ -1,498 +1,907 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Riyadhah Salik</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Salik Pejalan Ruhani</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafaf9; }
-        h1, .quran-title { font-family: 'Playfair Display', serif; }
-        .font-arabic { font-family: 'Amiri', serif; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+      :root {
+        --bg: #f3faf5;
+        --card: rgba(255, 255, 255, 0.92);
+        --border: #d7e8db;
+        --text: #123524;
+        --muted: #5f7569;
+        --accent: #2f855a;
+        --shadow: 0 18px 40px rgba(25, 77, 50, 0.12);
+        --danger: #b91c1c;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        font-family: "Cormorant Garamond", serif;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)),
+          url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjNeGMB-3zJ626LZ2Qlfd0PNFGIfqYulkM-XD94nNR5kpwp3HXpTh6xYxvW_1CNNHH0VdAezs8MDQ33mgtC_bnQfK6UD2HExDL6SY0IodohbK7vHSza_bEgxj7rHwiavW_a4fcPpUdwajRD2M5UC1BHvZxQdQEaX9lAJX7VODWnuhRDftejeHl7ayv780c/s16000/ChatGPT%20Image%20Jun%2016,%202026,%2003_02_57%20PM.png?semt=ais_hybrid&w=740&q=100")
+            center/cover fixed no-repeat;
+        position: relative;
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.14;
+        background-image:
+          linear-gradient(45deg, rgba(47, 133, 90, 0.08) 25%, transparent 25%, transparent 75%, rgba(47, 133, 90, 0.08) 75%, rgba(47, 133, 90, 0.08)),
+          linear-gradient(135deg, rgba(47, 133, 90, 0.08) 25%, transparent 25%, transparent 75%, rgba(47, 133, 90, 0.08) 75%, rgba(47, 133, 90, 0.08));
+        background-size: 44px 44px;
+        z-index: 0;
+      }
+
+      .app {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px 18px 110px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .page { display: none; }
+      .page.active { display: block; }
+
+      .content-card {
+        border: 1px solid var(--border);
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .page-box { padding: 22px; }
+      .section { margin-bottom: 18px; }
+      .section-title { margin: 0 0 12px; color: var(--accent); font-size: 20px; }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 14px;
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #eef8f1;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .hero-banner {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        min-height: 320px;
+        margin-bottom: 18px;
+        background:
+          linear-gradient(135deg, rgba(18, 53, 36, 0.22), rgba(47, 133, 90, 0.6)),
+          url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgaeNtQ4w8KJ9gLd1yAuOzVpXVD7-xl_l2Ia6ZWRLwyZxbu7lMw3ell29irZdb30nwSA8gC-TbyoiWoGW4Dg9wuXZzbg91AunbTZ_Tzz6FfiX9tOe3zlFers6YDapCP_Ft0LVW8qA55ngfL7mlwRxK1SVAQZKTVnf0ssVX-YF4jlnS5uvzi6EprO0zRfpU/s16000/ChatGPT%20Image%20Jun%2016,%202026,%2003_01_27%20PM.png")
+            center/cover no-repeat;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+      }
+
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        padding: 26px;
+        color: white;
+        z-index: 1;
+      }
+
+      .hero-content { max-width: 720px; }
+      .tag {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 12px;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+
+      .hero-content h2 {
+        margin: 0 0 10px;
+        font-size: 38px;
+        line-height: 1.15;
+      }
+
+      .hero-content p {
+        margin: 0;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .prayer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+
+      .prayer-item {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 92px;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background:
+          linear-gradient(135deg, rgba(18, 53, 36, 0.75), rgba(47, 133, 90, 0.42)),
+          url("https://img.magnific.com/premium-vector/luxury-green-jumma-ramadan-islamic-background-banner-with-gold-pattern-mandala_660620-178.jpg")
+            center/cover no-repeat;
+        text-align: center;
+        color: white;
+        box-shadow: 0 14px 30px rgba(18, 53, 36, 0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        margin: 0 auto;
+      }
+
+      .prayer-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 40%);
+        pointer-events: none;
+      }
+
+      .prayer-item .inner {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+      }
+
+      .prayer-item .icon {
+        display: inline-flex;
+        width: 24px;
+        height: 24px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.16);
+        margin-bottom: 4px;
+        font-size: 13px;
+        backdrop-filter: blur(8px);
+      }
+
+      .prayer-item .name {
+        display: block;
+        font-weight: 800;
+        margin-bottom: 2px;
+        font-size: 10px;
+        line-height: 1.1;
+      }
+
+      .prayer-item .time {
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.92);
+        line-height: 1.1;
+      }
+
+      .countdown-box {
+        margin-top: 12px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: #f6fbf7;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .image-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 220px;
+        border-radius: 20px;
+        display: flex;
+        align-items: flex-end;
+        background-size: cover;
+        background-position: center;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+
+      .image-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(8, 29, 19, 0.08), rgba(8, 29, 19, 0.78));
+      }
+
+      .image-card .body {
+        position: relative;
+        z-index: 1;
+        padding: 18px;
+        color: white;
+      }
+
+      .image-card h3 { margin: 0 0 8px; color: white; }
+      .image-card p { margin: 0; color: rgba(255, 255, 255, 0.9); line-height: 1.6; }
+
+      .quote-box {
+        padding: 24px;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .quote-box h2 { margin: 0 0 12px; color: var(--accent); }
+      .quote-box blockquote {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.8;
+        color: #1f4d35;
+        font-style: italic;
+        transition: opacity 1.6s ease, transform 1.6s ease;
+      }
+      .quote-box .source { margin-top: 12px; color: var(--muted); font-size: 14px; transition: opacity 1.6s ease, transform 1.6s ease; }
+
+      .journal { padding: 20px; }
+      .journal-section {
+        margin-bottom: 18px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: #f8fcf9;
+      }
+
+      .journal-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .journal-section-header h3 { margin: 0; color: var(--accent); }
+
+      .add-btn {
+        border: none;
+        border-radius: 999px;
+        background: #e7f5eb;
+        color: var(--accent);
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .item-list { display: grid; gap: 10px; }
+
+      .check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: white;
+      }
+
+      .check input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--accent);
+        margin-top: 4px;
+      }
+
+      .amalan-body { flex: 1; }
+
+      .text-desc {
+        font-size: 14px;
+        line-height: 1.8;
+        margin: 0;
+        color: var(--muted);
+        word-break: break-word;
+      }
+
+      .text-arabic {
+        font-family: "Amiri", serif;
+        font-size: 2rem;
+        line-height: 2.5;
+        max-width: 650px;
+        margin: 0 auto;
+        text-align: center;
+        direction: rtl;
+        color: #173b28;
+        white-space: normal;
+        word-break: break-word;
+        display: block;
+      }
+
+      .item-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+
+      .mini-btn {
+        border: none;
+        background: transparent;
+        color: #000;
+        padding: 0;
+        cursor: pointer;
+        font-size: 11px;
+        line-height: 1;
+        min-width: auto;
+      }
+
+      .bottom-nav {
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        transform: translateX(-50%);
+        width: min(680px, calc(100% - 24px));
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        padding: 10px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+        z-index: 100;
+      }
+
+      .bottom-nav a {
+        text-decoration: none;
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 8px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .bottom-nav a .icon { font-size: 20px; line-height: 1; }
+      .menu-link.active { background: #e1f3e7; color: var(--accent); }
+
+      .accordion {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .accordion-item {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: white;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .accordion-header {
+        width: 100%;
+        border: none;
+        background: linear-gradient(135deg, #f7fcf8, #eef8f1);
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font: inherit;
+        color: var(--text);
+        text-align: left;
+      }
+
+      .accordion-header h3 {
+        margin: 0;
+        font-size: 16px;
+        color: var(--accent);
+      }
+
+      .accordion-header .chevron {
+        font-size: 18px;
+        transition: transform 0.2s ease;
+      }
+
+      .accordion-item.active .accordion-header .chevron { transform: rotate(180deg); }
+
+      .accordion-content {
+        display: none;
+        padding: 18px 20px 20px;
+        color: var(--text);
+        line-height: 1.8;
+        background: #fff;
+      }
+
+      .accordion-item.active .accordion-content { display: block; }
+
+      .accordion-content h4 {
+        margin: 18px 0 8px;
+        color: var(--accent);
+        font-size: 15px;
+      }
+
+      .accordion-content p { margin: 0 0 10px; }
+      .accordion-content ul { margin: 0; padding-left: 20px; }
+      .accordion-content li { margin-bottom: 6px; }
+
+      .danger-list { list-style: none; padding-left: 0; }
+      .danger-list li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 18px;
+      }
+      .danger-list li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid var(--danger);
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0.7em;
+        transform: translateY(-50%);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 200;
+      }
+      .modal.active { display: flex; }
+
+      .modal-content {
+        width: 100%;
+        max-width: 460px;
+        background: white;
+        border-radius: 18px;
+        padding: 18px;
+      }
+
+      .modal-content h3 { margin-top: 0; color: var(--accent); }
+      .modal-content input,
+      .modal-content textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 12px;
+        font-family: inherit;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .modal-actions button {
+        padding: 10px 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .primary { background: var(--accent); color: white; }
+      .secondary { background: #e5efe8; color: var(--text); }
+
+      @media (max-width: 700px) {
+        .bottom-nav {
+          width: 100%;
+          left: 0;
+          transform: none;
+          border-radius: 18px 18px 0 0;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 6px;
+          padding: 8px 8px 10px;
+        }
+
+        .bottom-nav a { padding: 8px 4px; font-size: 11px; }
+        .bottom-nav a .icon { font-size: 18px; }
+
+        .prayer-grid {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 6px;
+        }
+
+        .prayer-item {
+          max-width: 100%;
+          width: 100%;
+          padding: 6px;
+        }
+
+        .cards-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        .image-card { min-height: 180px; }
+        .hero-banner { min-height: 260px; }
+        .hero-content h2 { font-size: 24px; }
+      }
     </style>
-</head>
-<body class="text-stone-900 min-h-screen p-4 md:p-8">
-
-<div id="app" class="max-w-md mx-auto">
-    <header class="mb-6">
-        <h1 class="text-2xl font-bold text-emerald-900">Riyadhah Salik</h1>
-        <p id="date-display" class="text-stone-500 text-sm"></p>
-    </header>
-
-    <div id="top-bar" class="space-y-4 mb-6">
-        <div id="prayer-container" class="bg-emerald-900 text-emerald-50 p-4 rounded-2xl shadow-xl">
-            <div class="flex justify-between items-center mb-3">
-                <div id="next-prayer-info">
-                    <p class="text-xs uppercase opacity-70">Memuat waktu shalat...</p>
-                </div>
-                <div id="countdown" class="text-xl font-mono font-bold">--:--:--</div>
+  </head>
+  <body>
+    <div class="app">
+      <main>
+        <section id="beranda" class="page active">
+          <div class="hero-banner">
+            <div class="hero-overlay">
+              <div class="hero-content">
+                <span class="tag"> </span>
+                <h2>    </h2>
+                <p>   </p>
+              </div>
             </div>
-            <div id="prayer-grid" class="grid grid-cols-5 gap-2 text-center text-[10px]"></div>
-        </div>
+          </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">
-            <p id="wisdom-text" class="italic text-stone-700 text-sm"></p>
-            <p id="wisdom-author" class="text-[10px] text-stone-400 mt-2 font-bold uppercase"></p>
-        </div>
+          <div class="section content-card page-box">
+            <h2 class="section-title">Waktu Sholat</h2>
+            <div class="prayer-grid" id="prayerGrid"></div>
+            <div class="countdown-box" id="nextPrayerInfo">Menghitung waktu sholat berikutnya...</div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">Card Harian Salik</h2>
+            <div class="cards-grid">
+              <div class="content-card image-card" style="background-image:url('https://t4.ftcdn.net/jpg/05/79/58/35/360_F_579583508_01J3XqhOapIJJVEBC20kk8cpS754Tdug.jpg')">
+                <div class="body">
+                  <h3>Target Zikir</h3>
+                  <p>Jaga konsistensi dzikir harian untuk menenangkan hati dan menguatkan ingatan kepada Allah.</p>
+                </div>
+              </div>
+              <div class="content-card image-card" style="background-image:url('https://t4.ftcdn.net/jpg/05/79/58/35/360_F_579583508_01J3XqhOapIJJVEBC20kk8cpS754Tdug.jpg')">
+                <div class="body">
+                  <h3>Target Sholat</h3>
+                  <p>Sholat tepat waktu sebagai pusat disiplin ruhani dan penjaga kualitas ibadah harian.</p>
+                </div>
+              </div>
+              <div class="content-card image-card" style="background-image:url('https://t4.ftcdn.net/jpg/05/79/58/35/360_F_579583508_01J3XqhOapIJJVEBC20kk8cpS754Tdug.jpg')">
+                <div class="body">
+                  <h3>Target Sholawat</h3>
+                  <p>Perbanyak sholawat untuk menghadirkan cinta, adab, dan keberkahan dalam hari-hari salik.</p>
+                </div>
+              </div>
+              <div class="content-card image-card" style="background-image:url('https://t4.ftcdn.net/jpg/05/79/58/35/360_F_579583508_01J3XqhOapIJJVEBC20kk8cpS754Tdug.jpg')">
+                <div class="body">
+                  <h3>Target Tilawah Quran</h3>
+                  <p>Tilawah harian agar hati lembut, pikiran tenang, dan langkah tetap berada di jalan yang lurus.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section content-card quote-box">
+            <h2>Kata Mutiara</h2>
+            <blockquote id="quoteText">...</blockquote>
+            <div id="quoteSource" class="source"></div>
+          </div>
+        </section>
+
+        <section id="pedoman" class="page">
+          <a class="back" href="#beranda">← Kembali ke Beranda</a>
+          <div class="content-card page-box">
+            <div class="badge">PEDOMAN SALIK</div>
+            <h2 style="margin:0;color:var(--accent);">Adab, Akhlak, Maqāmāt Spiritual, Larangan Murid</h2>
+            <div class="accordion" id="pedomanAccordion"></div>
+          </div>
+        </section>
+
+        <section id="amalan" class="page">
+          <a class="back" href="#beranda">← Kembali ke Beranda</a>
+          <div class="content-card page-box journal">
+            <div class="journal-section-header">
+              <div>
+                <h2 style="margin:0;color:var(--accent);">Amalan Harian</h2>
+                <p style="margin:8px 0 0;color:var(--muted);">Kelola doa, wirid, hizib, dan ratib. Item bisa ditambah dan diedit.</p>
+              </div>
+              <button class="add-btn" onclick="openAmalanModal('doa')">+</button>
+            </div>
+            <div id="amalanCategories"></div>
+          </div>
+        </section>
+
+        <section id="riyadhah" class="page">
+          <a class="back" href="#beranda">← Kembali ke Beranda</a>
+          <div class="content-card page-box journal">
+            <h2>Jurnal Harian Salik</h2>
+            <p>Catat amalan harian, perkembangan jiwa, dan audit anggota tubuh.</p>
+            <div id="riyadhahCategories"></div>
+          </div>
+          <audio id="adhanAudio" src="adhan.mp3" preload="auto"></audio>
+        </section>
+      </main>
     </div>
 
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-2 sticky top-0 bg-stone-50 z-10 scrollbar-hide">
-        <button onclick="changeTab('daily')" id="tab-daily" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-emerald-800 text-white">Harian</button>
-        <button onclick="changeTab('audit')" id="tab-audit" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Muhasabah</button>
-        <button onclick="changeTab('quran')" id="tab-quran" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Quran</button>
-        <button onclick="changeTab('referensi')" id="tab-referensi" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap px-4 bg-stone-200">Referensi</button>
+    <nav class="bottom-nav">
+      <a href="#beranda" class="menu-link"><span class="icon">🏠</span><span>Beranda</span></a>
+      <a href="#pedoman" class="menu-link"><span class="icon">📘</span><span>Pedoman</span></a>
+      <a href="#amalan" class="menu-link"><span class="icon">🤲</span><span>Amalan</span></a>
+      <a href="#riyadhah" class="menu-link"><span class="icon">🌿</span><span>Riyadhah</span></a>
+    </nav>
+
+    <div class="modal" id="itemModal">
+      <div class="modal-content">
+        <h3 id="modalTitle">Tambah Item</h3>
+        <input id="itemName" type="text" placeholder="Nama item" />
+        <textarea id="itemDesc" placeholder="Keterangan / teks Arab / catatan"></textarea>
+        <div class="modal-actions">
+          <button class="secondary" onclick="closeItemModal()">Batal</button>
+          <button class="primary" onclick="saveItem()">Simpan</button>
+        </div>
+      </div>
     </div>
 
-    <div id="content" class="space-y-6"></div>
-</div>
+    <script>
+      const prayerTimes = [
+        { name: "Subuh", time: "04:30", icon: "🌅" },
+        { name: "Dzuhur", time: "12:00", icon: "☀️" },
+        { name: "Ashar", time: "15:15", icon: "🌤️" },
+        { name: "Maghrib", time: "18:00", icon: "🌇" },
+        { name: "Isya", time: "19:15", icon: "🌙" }
+      ];
 
-<script>
-const WISDOMS = [
-    { text: "Hati yang bersih adalah cermin yang memantulkan cahaya Ilahi.", author: "Kalam Mursyid" },
-    { text: "Amalan yang paling dicintai Allah adalah yang paling konsisten.", author: "Hadist Bukhari" },
-    { text: "Dunia adalah penjara bagi orang mukmin dan surga bagi orang kafir.", author: "Hadist Muslim" }
-];
+      const quotes = [
+        { text: "Sesungguhnya bersama kesulitan ada kemudahan.", source: "QS. Al-Insyirah: 6" },
+        { text: "Barangsiapa bersungguh-sungguh, maka sesungguhnya kesungguhannya itu untuk dirinya sendiri.", source: "QS. Al-Ankabut: 6" },
+        { text: "Hati yang bersih adalah tempat turunnya cahaya.", source: "Kalam ulama sufi" },
+        { text: "Barang siapa mengenal dirinya, maka ia akan mengenal Tuhannya.", source: "Kalam hikmah" },
+        { text: "Sesungguhnya amal itu tergantung niatnya.", source: "Hadis Riwayat Bukhari dan Muslim" }
+      ];
 
-const DEFAULT_REFERENCES = {
-    'ratib-haddad': {
-        title: 'Ratib Al-Haddad',
-        arabic: [
-            "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيْمِ",
-            "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
-            "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ"
-        ],
-        translation: "Ratib Al-Haddad adalah wirid yang dibaca secara rutin sebagai bentuk penjagaan dzikir dan kedekatan kepada Allah."
-    },
-    'ratib-athos': {
-        title: 'Ratib Al-Athos',
-        arabic: [
-            "أَعُوذُ بِاللهِ السَّمِيعِ الْعَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
-            "اللَّهُمَّ إِنَّا نَسْأَلُكَ يَا اللَّهُ يَا رَحْمَنُ يَا رَحِيمُ",
-            "سُبْحَانَ اللهِ وَبِحَمْدِهِ سُبْحَانَ اللهِ الْعَظِيمُ"
-        ],
-        translation: "Ratib Al-Athos dibaca sebagai wirid harian untuk memperkuat hati dan ketenangan jiwa."
-    },
-    'zikir-pagi': {
-        title: 'Zikir Pagi',
-        arabic: [
-            "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
-            "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ"
-        ],
-        translation: "Zikir pagi dibaca untuk memulai hari dengan perlindungan, keberkahan, dan ketenangan."
-    }
-};
+      const pedomanData = [
+        { title: "I. ADAB DAN AKHLAK SEORANG SALIK", content: `<p>Salik adalah orang yang menempuh jalan menuju Allah dengan bimbingan syariat, tarekat, hakikat, dan ma'rifat.</p><h4>A. Adab Kepada Allah</h4><ul><li>Ikhlas dalam setiap amal.</li><li>Muraqabah (merasa diawasi Allah).</li><li>Ridha terhadap takdir Allah.</li><li>Tawakal setelah berikhtiar.</li><li>Syukur atas nikmat.</li><li>Sabar dalam ujian.</li><li>Takut (khauf) dan berharap (raja') kepada Allah.</li><li>Memperbanyak taubat.</li><li>Menjaga hati dari riya.</li><li>Menjaga niat setiap saat.</li></ul><h4>B. Adab Kepada Rasulullah ﷺ</h4><ul><li>Mencintai Rasulullah melebihi selain beliau.</li><li>Menghidupkan sunnah.</li><li>Memperbanyak shalawat.</li><li>Membaca sirah Nabi.</li><li>Meneladani akhlak beliau.</li></ul><h4>C. Adab Kepada Guru (Mursyid)</h4><ul><li>Taat selama tidak melanggar syariat.</li><li>Tidak membantah.</li><li>Husnuzan kepada guru.</li><li>Menjaga kehormatan guru.</li><li>Tidak menyebarkan kekurangan guru.</li><li>Mendengarkan dengan penuh perhatian.</li><li>Tidak mendahului guru dalam berbicara.</li><li>Melayani dengan ikhlas.</li><li>Memohon doa guru.</li><li>Tidak memutus hubungan tanpa alasan syar'i.</li></ul><h4>D. Adab Kepada Sesama Murid</h4><ul><li>Saling mencintai karena Allah.</li><li>Tidak iri dan dengki.</li><li>Tidak menggunjing.</li><li>Menolong sesama.</li><li>Menutupi aib saudara.</li><li>Mengutamakan ukhuwah.</li><li>Saling mendoakan.</li><li>Rendah hati.</li><li>Tidak merasa lebih mulia.</li><li>Menghindari perselisihan.</li></ul><h4>E. Akhlak Seorang Salik</h4><p><strong>Akhlak Wajib</strong></p><ul><li>Jujur (Shidq)</li><li>Amanah</li><li>Ikhlas</li><li>Tawadhu'</li><li>Sabar</li><li>Syukur</li><li>Zuhud</li><li>Wara'</li><li>Qana'ah</li><li>Istiqamah</li></ul><p><strong>Akhlak yang Harus Dihindari</strong></p><ul class="danger-list"><li>Takabbur</li><li>Ujub</li><li>Riya</li><li>Sum'ah</li><li>Hasad</li><li>Dengki</li><li>Ghibah</li><li>Fitnah</li><li>Dendam</li><li>Cinta dunia berlebihan</li></ul>` },
+        { title: "II. MAQĀMĀT (TINGKATAN SPIRITUAL) SALIK", content: `<ul><li><strong>1. Taubat (التوبة)</strong><br />Menyesali dosa, meninggalkan maksiat, dan bertekad tidak mengulanginya.<br />Latihan: Istighfar 100–1000 kali sehari.</li><li><strong>2. Wara' (الورع)</strong><br />Menjauhi perkara syubhat.<br />Latihan: Menjaga makanan, penghasilan, dan pandangan.</li><li><strong>3. Zuhud (الزهد)</strong><br />Tidak menjadikan dunia sebagai tujuan.<br />Tanda: Harta di tangan, bukan di hati.</li><li><strong>4. Faqr (الفقر)</strong><br />Merasa butuh hanya kepada Allah.<br />Tanda: Tidak bergantung kepada makhluk.</li><li><strong>5. Sabar (الصبر)</strong><br />Teguh dalam ibadah dan ujian.<br />Bentuk: Sabar dalam taat, meninggalkan maksiat, dan menghadapi musibah.</li><li><strong>6. Syukur (الشكر)</strong><br />Menggunakan nikmat untuk taat.</li><li><strong>7. Tawakal (التوكل)</strong><br />Berserah diri kepada Allah setelah ikhtiar.</li><li><strong>8. Ridha (الرضا)</strong><br />Menerima seluruh ketentuan Allah dengan lapang dada.</li><li><strong>9. Mahabbah (المحبة)</strong><br />Cinta kepada Allah.<br />Tanda: Senang berdzikir, senang beribadah, menjauhi maksiat.</li><li><strong>10. Ma'rifat (المعرفة)</strong><br />Pengenalan hati kepada Allah.<br />Tanda: Hati hidup, muraqabah tinggi, merasakan kehadiran Allah.</li></ul>` },
+        { title: "III. LARANGAN KERAS BAGI MURID", content: `<h4>Larangan Aqidah</h4><ul class="danger-list"><li>Syirik</li><li>Meminta kepada selain Allah</li><li>Percaya jimat dan kesaktian</li><li>Mendahulukan hawa nafsu daripada syariat</li></ul><h4>Larangan Akhlak</h4><ul class="danger-list"><li>Menghina guru</li><li>Membicarakan aib guru</li><li>Membantah guru dengan sombong</li><li>Mengadu domba</li><li>Hasad kepada sesama murid</li><li>Merasa paling suci</li><li>Meremehkan orang lain</li></ul><h4>Larangan Ibadah</h4><ul class="danger-list"><li>Meninggalkan shalat wajib</li><li>Meremehkan dzikir</li><li>Meninggalkan wirid tanpa uzur</li><li>Menunda taubat</li></ul><h4>Larangan Hati</h4><ul class="danger-list"><li>Riya</li><li>Ujub</li><li>Takabbur</li><li>Hubbul Jah (cinta kedudukan)</li><li>Hubbud Dunia (cinta dunia berlebihan)</li><li>Dengki</li><li>Dendam</li></ul><h4>Larangan Sosial</h4><ul class="danger-list"><li>Ghibah</li><li>Fitnah</li><li>Menyebar kebencian</li><li>Berdebat tanpa manfaat</li><li>Menyakiti sesama</li></ul>` }
+      ];
 
-function loadReferences() {
-    try {
-        const saved = JSON.parse(localStorage.getItem('riyadhah_references_v2'));
-        return saved || DEFAULT_REFERENCES;
-    } catch (e) {
-        return DEFAULT_REFERENCES;
-    }
-}
+      const riyadhahData = {
+        ibadah: ["Sholat 5 waktu", "Puasa sunnah", "Wirid / zikir harian"],
+        nafs: ["Mengontrol amarah", "Tidak ghibah", "Tidak iri dengan orang lain"],
+        ruh: ["Ikhlas", "Ridho", "Sabar"],
+        anggota: ["Mata dijaga dari yang haram", "Lisan dari dusta dan ghibah"]
+      };
 
-let state = JSON.parse(localStorage.getItem('riyadhah_v20')) || {
-    fardhu: [
-        { id: 'subuh', label: 'Shalat Subuh', completed: false },
-        { id: 'dzuhur', label: 'Shalat Dzuhur', completed: false },
-        { id: 'ashar', label: 'Shalat Ashar', completed: false },
-        { id: 'maghrib', label: 'Shalat Maghrib', completed: false },
-        { id: 'isya', label: 'Shalat Isya', completed: false }
-    ],
-    sunnah: [
-        { id: 'tahajjud', label: 'Shalat Tahajjud', completed: false },
-        { id: 'dhuha', label: 'Shalat Dhuha', completed: false }
-    ],
-    ibadahLain: [
-        { id: 'puasa', label: 'Puasa Sunnah', completed: false },
-        { id: 'tilawah', label: 'Tilawah 1 Juz', completed: false }
-    ],
-    penyakitHati: [{ id: 'riya', label: 'Menjaga dari Riya', completed: false }],
-    anggotaTubuh: [{ id: 'lisan', label: 'Menjaga Lisan', completed: false }],
-    zikirList: [{ id: 'istighfar', label: 'Istighfar', count: 0, target: 100 }],
-    quranList: [],
-    currentSurah: null,
-    activeRef: null,
-    editingRef: null,
-    showRefForm: false,
-    refTitle: '',
-    refArabic: '',
-    refTranslation: '',
-    references: loadReferences()
-};
+      let addTarget = "";
+      let editTarget = { category: "", index: -1 };
+      window.lastAdhanKey = "";
 
-let activeTab = 'daily';
-let prayerTimings = null;
+      function showPageFromHash() {
+        const hash = window.location.hash || "#beranda";
+        document.querySelectorAll(".page").forEach((p) => p.classList.toggle("active", `#${p.id}` === hash));
+        document.querySelectorAll(".menu-link").forEach((a) => a.classList.toggle("active", a.getAttribute("href") === hash));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
 
-function init() {
-    document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', {
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
+      function renderPrayerTimes() {
+        document.getElementById("prayerGrid").innerHTML = prayerTimes.map((p) => `<div class="prayer-item"><div class="inner"><span class="icon">${p.icon}</span><span class="name">${p.name}</span><span class="time">${p.time} WIB</span></div></div>`).join("");
+      }
 
-    const wisdom = WISDOMS[new Date().getDate() % WISDOMS.length];
-    document.getElementById('wisdom-text').innerText = `\"${wisdom.text}\"`;
-    document.getElementById('wisdom-author').innerText = `— ${wisdom.author}`;
+      function getTimeParts(hm) {
+        const [h, m] = hm.split(":").map(Number);
+        return h * 60 + m;
+      }
 
-    fetchPrayerTimes();
-    fetchQuranList();
-    render();
-    setInterval(updateCountdown, 1000);
-}
+      function updateCountdown() {
+        const now = new Date();
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        const upcoming = prayerTimes.map((p) => ({ ...p, mins: getTimeParts(p.time) })).find((p) => p.mins > nowMinutes) || { ...prayerTimes[0], mins: getTimeParts(prayerTimes[0].time), nextDay: true };
+        let target = upcoming.mins;
+        if (upcoming.nextDay || target <= nowMinutes) target += 24 * 60;
+        const diff = target - nowMinutes;
+        const hours = Math.floor(diff / 60);
+        const minutes = diff % 60;
+        document.getElementById("nextPrayerInfo").innerText = `Sholat berikutnya: ${upcoming.name} dalam ${hours} jam ${minutes} menit`;
+      }
 
-async function fetchPrayerTimes() {
-    try {
-        const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Bogor&country=Indonesia&method=11');
-        const data = await res.json();
-        prayerTimings = data.data.timings;
-        renderPrayerUI();
-    } catch (e) {
-        console.error("Gagal memuat jadwal", e);
-    }
-}
+      function showQuote() {
+        const q = quotes[Math.floor(Math.random() * quotes.length)];
+        const quote = document.getElementById("quoteText");
+        const source = document.getElementById("quoteSource");
+        if (!quote || !source) return;
+        quote.style.opacity = "0";
+        quote.style.transform = "translateY(14px)";
+        source.style.opacity = "0";
+        source.style.transform = "translateY(14px)";
+        setTimeout(() => {
+          quote.innerText = q.text;
+          source.innerText = q.source;
+          quote.style.opacity = "1";
+          quote.style.transform = "translateY(0)";
+          source.style.opacity = "1";
+          source.style.transform = "translateY(0)";
+        }, 700);
+      }
 
-function renderPrayerUI() {
-    if (!prayerTimings) return;
-    const prayers = { Fajr: 'Subuh', Dhuhr: 'Dzuhur', Asr: 'Ashar', Maghrib: 'Maghrib', Isha: 'Isya' };
-    document.getElementById('prayer-grid').innerHTML = Object.entries(prayers)
-        .map(([k, v]) => `<div><p class="font-bold opacity-70">${v}</p><p>${prayerTimings[k]}</p></div>`)
-        .join('');
-}
+      function renderPedoman() {
+        document.getElementById("pedomanAccordion").innerHTML = pedomanData.map((item, index) => `
+          <div class="accordion-item ${index === 0 ? "active" : ""}">
+            <button class="accordion-header" type="button">
+              <h3>${item.title}</h3>
+              <span class="chevron">⌄</span>
+            </button>
+            <div class="accordion-content">${item.content}</div>
+          </div>
+        `).join("");
+      }
 
-async function fetchQuranList() {
-    try {
-        const res = await fetch('https://equran.id/api/v2/surat');
-        const data = await res.json();
-        state.quranList = data.data;
-    } catch (e) {
-        console.error("Gagal memuat Quran", e);
-    }
-}
-
-function save() {
-    localStorage.setItem('riyadhah_v20', JSON.stringify(state));
-    localStorage.setItem('riyadhah_references_v2', JSON.stringify(state.references));
-    render();
-}
-
-function render() {
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        b.className = b.id === `tab-${activeTab}`
-            ? 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-emerald-800 text-white whitespace-nowrap px-4'
-            : 'tab-btn flex-1 py-2 text-xs font-bold rounded-lg bg-stone-200 whitespace-nowrap px-4';
-    });
-
-    const container = document.getElementById('content');
-    container.innerHTML = '';
-
-    if (activeTab === 'daily') {
-        container.innerHTML = `
-            ${renderCategory('Shalat Fardhu', state.fardhu, 'fardhu')}
-            ${renderCategory('Sunnah', state.sunnah, 'sunnah', true)}
-            ${renderCategory('Ibadah Lain', state.ibadahLain, 'ibadahLain', true)}
-            ${renderCategory('Target Zikir', state.zikirList, 'zikirList', true, true)}
-        `;
-    } else if (activeTab === 'audit') {
-        container.innerHTML = `
-            ${renderCategory('Penyakit Hati', state.penyakitHati, 'penyakitHati', true)}
-            ${renderCategory('Audit Anggota Tubuh', state.anggotaTubuh, 'anggotaTubuh', true)}
-            <div class="mt-6 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <h3 class="text-emerald-900 font-bold mb-3">Tingkat Keimanan</h3>
-                ${renderIndicator()}
-            </div>
-        `;
-    } else if (activeTab === 'referensi') {
-        if (state.activeRef) {
-            const ref = state.references[state.activeRef];
-            container.innerHTML = `
-                <button onclick="backToRefList()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4">
-                    <i data-lucide="arrow-left" size="16"></i> Kembali
-                </button>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 space-y-4">
-                    <h2 class="text-xl font-bold text-emerald-900">${ref.title}</h2>
-                    <div class="space-y-4">
-                        <div class="font-arabic text-right text-4xl leading-[2.2] space-y-4">
-                            ${ref.arabic.map(a => `<p>${a}</p>`).join('')}
-                        </div>
-                        <div class="text-sm text-stone-600 leading-relaxed">
-                            ${ref.translation}
-                        </div>
-                    </div>
-                    <div class="flex gap-2 pt-2">
-                        <button onclick="startEditRef('${state.activeRef}')" class="p-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-100" title="Edit">
-                            <i data-lucide="pencil" size="7"></i>
-                        </button>
-                        <button onclick="deleteRef('${state.activeRef}')" class="p-1.5 rounded-lg bg-rose-50 text-rose-600 border border-rose-100" title="Hapus">
-                            <i data-lucide="trash-2" size="7"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        } else {
-            const refEntries = Object.entries(state.references);
-            container.innerHTML = `
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-emerald-900">Referensi Amalan</h2>
-                    <button onclick="showAddRefForm()" class="bg-emerald-800 text-white px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1">
-                        <i data-lucide="plus" size="14"></i> Tambah
-                    </button>
-                </div>
-
-                <div id="ref-form" class="${state.showRefForm ? '' : 'hidden'} bg-white p-4 rounded-2xl shadow-sm border border-stone-100 mb-4 space-y-3">
-                    <input id="ref-title" type="text" placeholder="Judul amalan" class="w-full p-3 border rounded-lg outline-none text-sm" value="${escapeHtml(state.refTitle)}">
-                    <textarea id="ref-arabic" rows="5" placeholder="Teks Arab" class="w-full p-3 border rounded-lg outline-none text-sm leading-relaxed">${escapeHtml(state.refArabic)}</textarea>
-                    <textarea id="ref-translation" rows="4" placeholder="Terjemahan / penjelasan" class="w-full p-3 border rounded-lg outline-none text-sm leading-relaxed">${escapeHtml(state.refTranslation)}</textarea>
-                    <div class="flex gap-2">
-                        <button onclick="saveRef()" class="flex-1 bg-emerald-800 text-white py-2 rounded-lg text-sm font-bold">Simpan</button>
-                        <button onclick="cancelRefForm()" class="flex-1 bg-stone-200 text-stone-700 py-2 rounded-lg text-sm font-bold">Batal</button>
-                    </div>
-                </div>
-
-                <div class="space-y-3">
-                    ${refEntries.map(([k, v]) => `
-                        <div class="p-4 bg-white rounded-xl shadow-sm border border-stone-100">
-                            <button onclick="openRef('${k}')" class="w-full text-left">
-                                <div class="font-bold text-emerald-800 text-sm leading-snug">${v.title}</div>
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-    } else if (activeTab === 'quran') {
-        container.innerHTML = state.currentSurah
-            ? `<button onclick="state.currentSurah=null; render()" class="text-emerald-800 flex items-center gap-1 font-bold text-sm mb-4"><i data-lucide="arrow-left" size="16"></i> Kembali</button>
-               <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                <h2 class="text-2xl font-bold text-center mb-6">${state.currentSurah.namaLatin}</h2>
-                ${state.currentSurah.ayat.map(a => `<div class="mb-4 text-right"><p class="text-3xl font-arabic mb-2 leading-relaxed">${a.teksArab}</p><p class="text-xs text-stone-500 text-left">${a.nomorAyat}. ${a.teksIndonesia}</p></div>`).join('')}
-               </div>`
-            : `<div class="grid grid-cols-1 gap-2">${state.quranList.map(s => `<button onclick="readSurah(${s.nomor})" class="p-4 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between"><span>${s.namaLatin}</span><span class="font-arabic text-emerald-800">${s.nama}</span></button>`).join('')}</div>`;
-    }
-
-    lucide.createIcons();
-}
-
-function renderIndicator() {
-    const all = [...state.fardhu, ...state.sunnah, ...state.ibadahLain, ...state.penyakitHati, ...state.anggotaTubuh];
-    const percent = all.length ? Math.round((all.filter(i => i.completed).length / all.length) * 100) : 0;
-    let status = percent < 40 ? "Perlu Perbaikan Segera" : percent < 75 ? "Sedang Berkembang" : "Istiqomah";
-    return `<div class="w-full bg-emerald-200 h-2 rounded-full"><div class="bg-emerald-800 h-full rounded-full" style="width:${percent}%"></div></div><p class="text-xs mt-2 text-emerald-900 font-bold">${percent}% Pencapaian Harian — ${status}</p>`;
-}
-
-function renderCategory(t, items, k, canAdd, isZikir) {
-    return `<div class="space-y-2">
-        <div class="flex justify-between items-center">
-            <h3 class="text-xs font-bold text-stone-400 uppercase">${t}</h3>
-            ${canAdd ? `<button onclick="toggleForm('${k}')" class="text-emerald-800"><i data-lucide="plus" size="14"></i></button>` : ''}
-        </div>
-
-        ${
-            canAdd ? `
-            <div id="form-${k}" class="hidden bg-white p-3 rounded-xl border border-stone-200 shadow-sm mb-2 space-y-2">
-                ${
-                    isZikir ? `
-                        <input id="in-${k}" class="p-2 w-full text-sm rounded-lg border outline-none" placeholder="Nama zikir">
-                        <input id="target-${k}" type="number" min="1" value="100" class="p-2 w-full text-sm rounded-lg border outline-none" placeholder="Target harian">
-                    ` : `
-                        <input id="in-${k}" class="p-2 w-full text-sm rounded-lg border outline-none" placeholder="Nama amalan">
-                    `
-                }
-                <button onclick="addItem('${k}', ${!!isZikir})" class="w-full bg-emerald-800 text-white px-3 py-2 rounded-lg text-xs font-bold">Simpan</button>
-            </div>
-            ` : ''
-        }
-
-        ${items.map(i => `
-            <div class="flex items-center gap-2">
-                ${
-                    isZikir ? `
-                        <div class="flex-1 p-3 bg-white rounded-xl shadow-sm border border-stone-100 flex justify-between items-center">
-                            <span class="text-sm font-medium">${i.label}</span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="updZikir('${i.id}', ${i.count-1})" class="bg-stone-100 px-2 py-1 rounded text-sm">-</button>
-                                <span class="text-sm font-bold">${i.count}/${i.target}</span>
-                                <button onclick="updZikir('${i.id}', ${i.count+1})" class="bg-stone-100 px-2 py-1 rounded text-sm">+</button>
-                            </div>
-                        </div>
-                    ` : `
-                        <button onclick="toggleHabit('${k}','${i.id}')" class="flex-1 p-3 flex justify-between rounded-xl border ${i.completed?'bg-emerald-50 border-emerald-200':'bg-white'}">
-                            <span>${i.label}</span>
-                            <i data-lucide="${i.completed?'check':'circle'}" size="16"></i>
-                        </button>
-                    `
-                }
-                <button onclick="delItem('${k}','${i.id}')" class="text-rose-400"><i data-lucide="trash-2" size="14"></i></button>
-            </div>
-        `).join('')}
-    </div>`;
-}
-
-function escapeHtml(str) {
-    return String(str || '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('\"', '&quot;')
-        .replaceAll("'", '&#39;');
-}
-
-function toggleForm(k) {
-    const el = document.getElementById(`form-${k}`);
-    if (el) el.classList.toggle('hidden');
-}
-
-function addItem(k, z) {
-    const input = document.getElementById(`in-${k}`);
-    const val = input.value.trim();
-    if (!val) return;
-
-    if (z) {
-        const targetInput = document.getElementById(`target-${k}`);
-        const target = parseInt(targetInput.value) || 100;
-
-        state[k].push({
-            id: Date.now().toString(),
-            label: val,
-            count: 0,
-            target: target
+      function renderAmalan() {
+        const data = JSON.parse(localStorage.getItem("salikAmalan") || "{}");
+        const titles = { doa: "Doa", wirid: "Wirid", hizib: "Hizib", ratib: "Ratib" };
+        const container = document.getElementById("amalanCategories");
+        if (!container) return;
+        container.innerHTML = "";
+        Object.keys(titles).forEach((key) => {
+          const items = data[key] || [];
+          const section = document.createElement("div");
+          section.className = "journal-section";
+          section.innerHTML = `<div class="journal-section-header"><h3>${titles[key]}</h3><button class="add-btn" onclick="openAmalanModal('${key}')">+</button></div><div class="item-list" id="amalan-list-${key}"></div>`;
+          container.appendChild(section);
+          document.getElementById(`amalan-list-${key}`).innerHTML = items.length ? items.map((item, index) => `<div class="check"><input type="checkbox" /><div class="amalan-body"><p class="text-desc">${item.name || "Tanpa Nama"}</p><div class="text-arabic">${item.desc || ""}</div></div><div class="item-actions"><button class="mini-btn edit-btn" onclick="openEditAmalanModal('${key}', ${index})">✏</button><button class="mini-btn delete-btn" onclick="deleteAmalanItem('${key}', ${index})">-</button></div></div>`).join("") : `<div class="inline-note">Belum ada amalan pada kategori ini.</div>`;
         });
+      }
 
-        targetInput.value = 100;
-    } else {
-        state[k].push({
-            id: Date.now().toString(),
-            label: val,
-            completed: false
+      function renderRiyadhah() {
+        const data = JSON.parse(localStorage.getItem("salikRiyadhah") || "{}");
+        const titles = { ibadah: "Ibadah Harian", nafs: "Tazkiyatun Nafs", ruh: "Tazkiyatun Ruh", anggota: "Audit Anggota Tubuh" };
+        const container = document.getElementById("riyadhahCategories");
+        if (!container) return;
+        container.innerHTML = "";
+        Object.keys(titles).forEach((key) => {
+          const items = data[key] || [];
+          const section = document.createElement("div");
+          section.className = "journal-section";
+          section.innerHTML = `<div class="journal-section-header"><h3>${titles[key]}</h3><button class="add-btn" onclick="openRiyadhahModal('${key}')">+</button></div><div class="item-list" id="riyadhah-list-${key}"></div>`;
+          container.appendChild(section);
+          document.getElementById(`riyadhah-list-${key}`).innerHTML = items.length ? items.map((item) => `<div class="check"><input type="checkbox" /><div class="amalan-body"><p class="text-desc">${item}</p></div></div>`).join("") : `<div class="inline-note">Belum ada item pada kategori ini.</div>`;
         });
-    }
+      }
 
-    input.value = '';
-    save();
-}
+      function openAmalanModal(category) {
+        addTarget = category;
+        editTarget = { category: "", index: -1 };
+        document.getElementById("modalTitle").innerText = "Tambah Amalan";
+        document.getElementById("itemName").value = "";
+        document.getElementById("itemDesc").value = "";
+        document.getElementById("itemModal").classList.add("active");
+      }
 
-function delItem(k, id) {
-    state[k] = state[k].filter(h => h.id !== id);
-    save();
-}
+      function openRiyadhahModal(category) {
+        addTarget = category;
+        editTarget = { category: "", index: -1 };
+        document.getElementById("modalTitle").innerText = "Tambah Item Riyadhah";
+        document.getElementById("itemName").value = "";
+        document.getElementById("itemDesc").value = "";
+        document.getElementById("itemModal").classList.add("active");
+      }
 
-function toggleHabit(k, id) {
-    state[k] = state[k].map(h => h.id === id ? { ...h, completed: !h.completed } : h);
-    save();
-}
+      function openEditAmalanModal(category, index) {
+        const data = JSON.parse(localStorage.getItem("salikAmalan") || "{}");
+        addTarget = category;
+        editTarget = { category, index };
+        document.getElementById("modalTitle").innerText = "Edit Amalan";
+        document.getElementById("itemName").value = data[category][index]?.name || "";
+        document.getElementById("itemDesc").value = data[category][index]?.desc || "";
+        document.getElementById("itemModal").classList.add("active");
+      }
 
-function updZikir(id, count) {
-    state.zikirList = state.zikirList.map(i => i.id === id ? { ...i, count: Math.max(0, count) } : i);
-    save();
-}
+      function closeItemModal() {
+        document.getElementById("itemModal").classList.remove("active");
+      }
 
-function changeTab(t) {
-    activeTab = t;
-    if (t !== 'referensi') {
-        state.activeRef = null;
-        state.showRefForm = false;
-        state.editingRef = null;
-    }
-    render();
-}
+      function saveItem() {
+        const name = document.getElementById("itemName").value.trim();
+        const desc = document.getElementById("itemDesc").value.trim();
 
-function openRef(key) {
-    state.activeRef = key;
-    render();
-}
-
-function backToRefList() {
-    state.activeRef = null;
-    render();
-}
-
-function showAddRefForm() {
-    state.showRefForm = true;
-    state.editingRef = null;
-    state.refTitle = '';
-    state.refArabic = '';
-    state.refTranslation = '';
-    render();
-}
-
-function cancelRefForm() {
-    state.showRefForm = false;
-    state.editingRef = null;
-    state.refTitle = '';
-    state.refArabic = '';
-    state.refTranslation = '';
-    render();
-}
-
-function startEditRef(key) {
-    const ref = state.references[key];
-    state.activeRef = null;
-    state.showRefForm = true;
-    state.editingRef = key;
-    state.refTitle = ref.title;
-    state.refArabic = (ref.arabic || []).join('\n');
-    state.refTranslation = ref.translation || '';
-    render();
-}
-
-function saveRef() {
-    const title = document.getElementById('ref-title').value.trim();
-    const arabic = document.getElementById('ref-arabic').value.trim();
-    const translation = document.getElementById('ref-translation').value.trim();
-    if (!title || !arabic || !translation) return;
-
-    const key = state.editingRef || `ref-${Date.now()}`;
-    state.references[key] = {
-        title,
-        arabic: arabic.split('\n').map(x => x.trim()).filter(Boolean),
-        translation
-    };
-    state.showRefForm = false;
-    state.editingRef = null;
-    state.refTitle = '';
-    state.refArabic = '';
-    state.refTranslation = '';
-    save();
-}
-
-function deleteRef(key) {
-    if (!confirm('Hapus referensi ini?')) return;
-    delete state.references[key];
-    if (state.activeRef === key) state.activeRef = null;
-    if (state.editingRef === key) state.editingRef = null;
-    save();
-}
-
-function updateCountdown() {
-    if (!prayerTimings) return;
-    const now = new Date();
-    const keys = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-    for (let k of keys) {
-        const [h, m] = prayerTimings[k].split(':');
-        const target = new Date();
-        target.setHours(h, m, 0);
-        if (target > now) {
-            const diff = target - now;
-            document.getElementById('next-prayer-info').innerHTML = `<p class="text-xs opacity-70">Waktu Berikutnya</p><p class="font-bold">${k}</p>`;
-            document.getElementById('countdown').innerText = `${Math.floor(diff/3600000)}:${Math.floor((diff%3600000)/60000)}:${Math.floor((diff%60000)/1000)}`.split(':').map(v => v.padStart(2,'0')).join(':');
-            return;
+        if (document.getElementById("amalan").classList.contains("active")) {
+          const data = JSON.parse(localStorage.getItem("salikAmalan") || "{}");
+          if (!data[addTarget]) data[addTarget] = [];
+          const payload = { name, desc };
+          if (editTarget.index >= 0 && editTarget.category === addTarget) data[addTarget][editTarget.index] = payload;
+          else data[addTarget].push(payload);
+          localStorage.setItem("salikAmalan", JSON.stringify(data));
+          renderAmalan();
+        } else if (document.getElementById("riyadhah").classList.contains("active")) {
+          const data = JSON.parse(localStorage.getItem("salikRiyadhah") || "{}");
+          if (!data[addTarget]) data[addTarget] = [];
+          const payload = name || desc;
+          if (editTarget.index >= 0 && editTarget.category === addTarget) data[addTarget][editTarget.index] = payload;
+          else data[addTarget].push(payload);
+          localStorage.setItem("salikRiyadhah", JSON.stringify(data));
+          renderRiyadhah();
         }
-    }
-}
 
-async function readSurah(id) {
-    try {
-        const res = await fetch(`https://equran.id/api/v2/surat/${id}`);
-        const d = await res.json();
-        state.currentSurah = d.data;
-        render();
-    } catch (e) {
-        console.error('Gagal memuat surat', e);
-    }
-}
+        closeItemModal();
+      }
 
-init();
-</script>
-</body>
+      function deleteAmalanItem(category, index) {
+        const data = JSON.parse(localStorage.getItem("salikAmalan") || "{}");
+        data[category].splice(index, 1);
+        localStorage.setItem("salikAmalan", JSON.stringify(data));
+        renderAmalan();
+      }
+
+      function getNowHM() {
+        const now = new Date();
+        return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      }
+
+      function checkAdhan() {
+        const nowHM = getNowHM();
+        const matched = prayerTimes.find((p) => p.time === nowHM);
+        if (matched) {
+          const key = `${nowHM}-${new Date().getDate()}`;
+          if (window.lastAdhanKey !== key) {
+            window.lastAdhanKey = key;
+            const audio = document.getElementById("adhanAudio");
+            if (audio) audio.play().catch(() => {});
+            alert(`Waktu sholat ${matched.name} telah masuk.`);
+          }
+        }
+      }
+
+      document.addEventListener("click", function (e) {
+        const header = e.target.closest(".accordion-header");
+        if (!header) return;
+        const item = header.closest(".accordion-item");
+        item.classList.toggle("active");
+      });
+
+      window.addEventListener("hashchange", showPageFromHash);
+
+      renderPrayerTimes();
+      renderPedoman();
+      showQuote();
+      renderAmalan();
+      renderRiyadhah();
+      showPageFromHash();
+      updateCountdown();
+      checkAdhan();
+
+      setInterval(() => {
+        showQuote();
+        updateCountdown();
+        checkAdhan();
+      }, 5000);
+    </script>
+  </body>
 </html>
