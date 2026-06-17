@@ -138,17 +138,16 @@
 
       .prayer-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
       }
 
       .prayer-item {
         position: relative;
         overflow: hidden;
         width: 100%;
-        max-width: 92px;
         aspect-ratio: 1 / 1;
-        border-radius: 50%;
+        border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.25);
         background:
           linear-gradient(135deg, rgba(18, 53, 36, 0.75), rgba(47, 133, 90, 0.42)),
@@ -160,15 +159,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 8px;
-        margin: 0 auto;
+        padding: 6px;
       }
 
       .prayer-item::after {
         content: "";
         position: absolute;
         inset: 0;
-        border-radius: 50%;
+        border-radius: 18px;
         background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 40%);
         pointer-events: none;
       }
@@ -177,33 +175,45 @@
         position: relative;
         z-index: 1;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        min-width: 0;
       }
 
       .prayer-item .icon {
         display: inline-flex;
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.16);
-        margin-bottom: 4px;
-        font-size: 13px;
+        font-size: 12px;
         backdrop-filter: blur(8px);
       }
 
       .prayer-item .name {
         display: block;
         font-weight: 800;
-        margin-bottom: 2px;
         font-size: 10px;
         line-height: 1.1;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        text-align: center;
       }
 
       .prayer-item .time {
         font-size: 9px;
         color: rgba(255, 255, 255, 0.92);
         line-height: 1.1;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        text-align: center;
       }
 
       .countdown-box {
@@ -544,9 +554,26 @@
         }
 
         .prayer-item {
-          max-width: 100%;
-          width: 100%;
-          padding: 6px;
+          aspect-ratio: auto;
+          min-height: 84px;
+          padding: 5px;
+          border-radius: 14px;
+        }
+
+        .prayer-item .icon {
+          width: 20px;
+          height: 20px;
+          font-size: 11px;
+        }
+
+        .prayer-item .name {
+          font-size: 8px;
+          line-height: 1.05;
+        }
+
+        .prayer-item .time {
+          font-size: 7px;
+          line-height: 1.05;
         }
 
         .cards-grid {
